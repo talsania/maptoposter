@@ -680,38 +680,18 @@ def create_poster(
             family="monospace", weight="bold", size=adjusted_font_size
         )
 
-    # --- BOTTOM TEXT ---
-    ax.text(
-        0.5,
-        0.14,
-        spaced_city,
-        transform=ax.transAxes,
-        color=THEME["text"],
-        ha="center",
-        fontproperties=font_main_adjusted,
-        zorder=11,
-    )
-
-    ax.text(
-        0.5,
-        0.10,
-        display_country.upper(),
-        transform=ax.transAxes,
-        color=THEME["text"],
-        ha="center",
-        fontproperties=font_sub,
-        zorder=11,
-    )
-
+    # --- BOTTOM COORDINATES ---
     lat, lon = point
-    coords = (
-        f"{lat:.4f}° N / {lon:.4f}° E"
-        if lat >= 0
-        else f"{abs(lat):.4f}° S / {lon:.4f}° E"
-    )
-    if lon < 0:
-        coords = coords.replace("E", "W")
-
+    
+    # Latitude coordinate
+    lat_coord = f"{lat:.4f}° N" if lat >= 0 else f"{abs(lat):.4f}° S"
+    
+    # Longitude coordinate
+    lon_coord = f"{lon:.4f}° E" if lon >= 0 else f"{abs(lon):.4f}° W"
+    
+    # Combined coordinates with spacing
+    coords = f"{lat_coord}       {lon_coord}"
+    
     ax.text(
         0.5,
         0.07,
@@ -724,6 +704,7 @@ def create_poster(
         zorder=11,
     )
 
+    # Decorative line
     ax.plot(
         [0.4, 0.6],
         [0.125, 0.125],
@@ -734,23 +715,24 @@ def create_poster(
     )
 
     # --- ATTRIBUTION (bottom right) ---
-    if FONTS:
-        font_attr = FontProperties(fname=FONTS["light"], size=8)
-    else:
-        font_attr = FontProperties(family="monospace", size=8)
+    # OpenStreetMap attribution removed
+    # if FONTS:
+    #     font_attr = FontProperties(fname=FONTS["light"], size=8)
+    # else:
+    #     font_attr = FontProperties(family="monospace", size=8)
 
-    ax.text(
-        0.98,
-        0.02,
-        "© OpenStreetMap contributors",
-        transform=ax.transAxes,
-        color=THEME["text"],
-        alpha=0.5,
-        ha="right",
-        va="bottom",
-        fontproperties=font_attr,
-        zorder=11,
-    )
+    # ax.text(
+    #     0.98,
+    #     0.02,
+    #     "© OpenStreetMap contributors",
+    #     transform=ax.transAxes,
+    #     color=THEME["text"],
+    #     alpha=0.5,
+    #     ha="right",
+    #     va="bottom",
+    #     fontproperties=font_attr,
+    #     zorder=11,
+    # )
 
     # 5. Save
     print(f"Saving to {output_file}...")
@@ -764,7 +746,7 @@ def create_poster(
 
     # DPI matters mainly for raster formats
     if fmt == "png":
-        save_kwargs["dpi"] = 300
+        save_kwargs["dpi"] = 600
 
     plt.savefig(output_file, format=fmt, **save_kwargs)
 
